@@ -57,6 +57,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayer::OnMoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &ACPlayer::OnTurn);
 	PlayerInputComponent->BindAxis("LookUp", this, &ACPlayer::OnLookUp);
+	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::OnZoom);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -81,10 +82,24 @@ void ACPlayer::OnMoveRight(float Axis)
 
 void ACPlayer::OnTurn(float Axis)
 {
-	// Todo. Rotate Control
+	float rate = Axis * OptionComp->GetMouseXSpeed() * GetWorld()->GetDeltaSeconds();
+
+	AddControllerYawInput(rate);
 }
 
 void ACPlayer::OnLookUp(float Axis)
 {
+	float rate = Axis * OptionComp->GetMouseYSpeed() * GetWorld()->GetDeltaSeconds();
+
+	AddControllerPitchInput(rate);
+}
+
+void ACPlayer::OnZoom(float Axis)
+{
+	float Rate = OptionComp->GetZoomSpeed() * Axis * GetWorld()->GetDeltaSeconds();
+
+	SpringArmComp->TargetArmLength += Rate;
+	
+	SpringArmComp->TargetArmLength = FMath::Clamp(SpringArmComp->TargetArmLength, OptionComp->GetZoomMin(), OptionComp->GetZoomMax());
 }
 

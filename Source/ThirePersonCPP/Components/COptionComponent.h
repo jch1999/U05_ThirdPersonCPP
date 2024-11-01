@@ -14,10 +14,25 @@ public:
 	UCOptionComponent();
 
 public:
-	FORCEINLINE float GetMouseXSpeed() { return MouseXSpeed; }
-	FORCEINLINE float GetMouseYSpeed() { return MouseYSpeed; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetMouseXSpeed() const { return MouseXSpeed; }
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetMouseYSpeed() const { return MouseYSpeed; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetZoomSpeed() const { return ZoomSpeed; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetZoomMin() const { return ZoomRange.X; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetZoomMax() const { return ZoomRange.Y; }
+
+	UFUNCTION(BlueprintCallable)
 	void SetMouseXSpeed(float InSpeed);
+
+	UFUNCTION(BlueprintCallable)
 	void SetMouseYSpeed(float InSpeed);
 
 protected:
@@ -26,4 +41,11 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Mouse")
 	float MouseYSpeed;
+
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Mouse")
+	float ZoomSpeed;
+
+	// X is min range, Y is max range.
+	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Mouse")
+	FVector2D ZoomRange;
 };
