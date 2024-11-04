@@ -5,6 +5,8 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CAttributeComponent.h"
 #include "Components/COptionComponent.h"
+#include "Components/CStateComponent.h"
+#include "Components/CMontagesComponent.h"
 
 ACPlayer::ACPlayer()
 {
@@ -35,6 +37,12 @@ ACPlayer::ACPlayer()
 
 	// Option Comp
 	CHelpers::CreateActorComponent(this, &OptionComp, "OptionComp");
+
+	// State Comp
+	CHelpers::CreateActorComponent(this, &StateComp, "StateComp");
+
+	// State Comp
+	CHelpers::CreateActorComponent(this, &MontagesComp, "MontagesComp");
 
 	// Movement Comp
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
