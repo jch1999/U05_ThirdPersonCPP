@@ -1,4 +1,6 @@
 #include "CActionComponent.h"
+#include "Actions/CActionData.h"
+
 UCActionComponent::UCActionComponent()
 {
 }
@@ -10,7 +12,7 @@ void UCActionComponent::BeginPlay()
 
 void UCActionComponent::SetUnarmedMode()
 {
-	SetMode(EActionType::Unarmed);
+	ChangeType(EActionType::Unarmed);
 }
 
 void UCActionComponent::SetFistMode()
@@ -51,10 +53,7 @@ void UCActionComponent::SetMode(EActionType InNewType)
 		return;
 	}
 
-	EActionType PrevType = Type;
-	Type = InNewType;
-
-	ChangeType(PrevType, Type);
+	ChangeType(InNewType);
 }
 
 void UCActionComponent::ChangeType(EActionType InNewType)
@@ -62,5 +61,5 @@ void UCActionComponent::ChangeType(EActionType InNewType)
 	EActionType PrevType = Type;
 	Type = InNewType;
 
-	OnActionTypeChanged.BroadCast(PrevType, Type);
+	OnActionTypeChanged.Broadcast(PrevType, Type);
 }

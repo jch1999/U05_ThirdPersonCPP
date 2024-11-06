@@ -75,6 +75,13 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Evade", IE_Pressed, this, &ACPlayer::OnEvade);
 	PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &ACPlayer::OnWalk);
 	PlayerInputComponent->BindAction("Walk", IE_Released, this, &ACPlayer::OffWalk);
+
+	PlayerInputComponent->BindAction("Fist", IE_Pressed, this, &ACPlayer::OnFist);
+	PlayerInputComponent->BindAction("OneHand", IE_Pressed, this, &ACPlayer::OnOneHand);
+	PlayerInputComponent->BindAction("TwoHand", IE_Pressed, this, &ACPlayer::OnTwoHand);
+	PlayerInputComponent->BindAction("MagicBall", IE_Pressed, this, &ACPlayer::OnMagicBall);
+	PlayerInputComponent->BindAction("Warp", IE_Pressed, this, &ACPlayer::OnWarp);
+	PlayerInputComponent->BindAction("WhirlWind", IE_Pressed, this, &ACPlayer::OnWhirlWind);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
@@ -143,6 +150,48 @@ void ACPlayer::OnWalk()
 void ACPlayer::OffWalk()
 {
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
+}
+
+void ACPlayer::OnFist()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetFistMode();
+}
+
+void ACPlayer::OnOneHand()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetOneHandMode();
+}
+
+void ACPlayer::OnTwoHand()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetTwoHandMode();
+}
+
+void ACPlayer::OnMagicBall()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetMagicBallMode();
+}
+
+void ACPlayer::OnWarp()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetWarpMode();
+}
+
+void ACPlayer::OnWhirlWind()
+{
+	CheckFalse(StateComp->IsIdleMode());
+
+	ActionComp->SetWhirlWindMode();
 }
 
 void ACPlayer::Begin_Roll()

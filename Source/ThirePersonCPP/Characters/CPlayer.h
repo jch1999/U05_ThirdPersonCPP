@@ -33,9 +33,17 @@ private:
 	void OnTurn(float Axis);
 	void OnLookUp(float Axis);
 	void OnZoom(float Axis);
+	
 	void OnEvade();
 	void OnWalk();
 	void OffWalk();
+
+	void OnFist();
+	void OnOneHand();
+	void OnTwoHand();
+	void OnMagicBall();
+	void OnWarp();
+	void OnWhirlWind();
 
 private:
 	void Begin_Roll();
