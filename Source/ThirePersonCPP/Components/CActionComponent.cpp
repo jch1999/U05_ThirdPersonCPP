@@ -1,5 +1,8 @@
 #include "CActionComponent.h"
+#include "Global.h"
+#include "GameFramework/Character.h"
 #include "Actions/CActionData.h"
+#include "ACtions/CEquipment.h"
 
 UCActionComponent::UCActionComponent()
 {
@@ -8,10 +11,30 @@ UCActionComponent::UCActionComponent()
 void UCActionComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
+	
+	if (OwnerCharacter)
+	{
+		for (int32 i = 0; i < (int32)EActionType::Max; i++)
+		{
+			if (!DataAssets[i])continue;
+			DataAssets[i]->BeginPlay(OwnerCharacter);
+		}
+	}
 }
 
 void UCActionComponent::SetUnarmedMode()
 {
+	if (DataAssets[(int32)Type] && DataAssets[(int32)EActionType::Type]->GetEquipment())
+	{
+		DataAssets[(int32)Type]->GetEquipment()->Unequip();
+	}
+
+	if (DataAssets[(int32)EActionType::Unarmed] && DataAssets[(int32)EActionType::EActionType::Unarmed]->GetEquipment())
+	{
+		DataAssets[(int32)EActionType::Unarmed]->GetEquipment()->Equip();
+	}
 	ChangeType(EActionType::Unarmed);
 }
 
@@ -52,7 +75,12 @@ void UCActionComponent::SetMode(EActionType InNewType)
 		SetUnarmedMode();
 		return;
 	}
+	else if (!IsUnarmedMode())
+	{
+		DataAssets[(int32)Type]->GetEquipment()->Unequip();
+	}
 
+	// Todo, 현재 무기 Equip
 	ChangeType(InNewType);
 }
 

@@ -60,6 +60,8 @@ void ACPlayer::BeginPlay()
 	
 
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
+
+	ActionComp->SetUnarmedMode();
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
