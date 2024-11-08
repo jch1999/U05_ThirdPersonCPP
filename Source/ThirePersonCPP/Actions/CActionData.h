@@ -39,7 +39,7 @@ public:
 	void BeginPlay(ACharacter* InOwnerCharacter);
 
 public:
-	FORCEINLINE Equipment* GetEquipment() { return Equipment; }
+	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
 private:
 	FString MakeLabel(ACharacter* InOwnerCharacter,FString InMiddleName);
 

@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
+#include "Interfaces/CCharacterInterface.h"
 #include "CPlayer.generated.h"
 
 class USpringArmComponent;
@@ -14,12 +15,14 @@ class UCMontagesComponent;
 class UCActionComponent;
 
 UCLASS()
-class THIREPERSONCPP_API ACPlayer : public ACharacter
+class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface
 {
 	GENERATED_BODY()
 
 public:
 	ACPlayer();
+	// Inherited via ICCharacterInterface
+	virtual void SetBodyColor(FLinearColor InColor) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -80,4 +83,8 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
+
+private:
+	UMaterialInstanceDynamic* BodyMaterial;
+	UMaterialInstanceDynamic* LogoMaterial;
 };

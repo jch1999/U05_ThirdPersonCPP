@@ -26,12 +26,12 @@ void UCActionComponent::BeginPlay()
 
 void UCActionComponent::SetUnarmedMode()
 {
-	if (DataAssets[(int32)Type] && DataAssets[(int32)EActionType::Type]->GetEquipment())
+	if (DataAssets[(int32)Type] && DataAssets[(int32)Type]->GetEquipment())
 	{
 		DataAssets[(int32)Type]->GetEquipment()->Unequip();
 	}
 
-	if (DataAssets[(int32)EActionType::Unarmed] && DataAssets[(int32)EActionType::EActionType::Unarmed]->GetEquipment())
+	if (DataAssets[(int32)EActionType::Unarmed] && DataAssets[(int32)EActionType::Unarmed]->GetEquipment())
 	{
 		DataAssets[(int32)EActionType::Unarmed]->GetEquipment()->Equip();
 	}
@@ -77,10 +77,17 @@ void UCActionComponent::SetMode(EActionType InNewType)
 	}
 	else if (!IsUnarmedMode())
 	{
-		DataAssets[(int32)Type]->GetEquipment()->Unequip();
+		if (DataAssets[(int32)Type] && DataAssets[(int32)Type]->GetEquipment())
+		{
+			DataAssets[(int32)Type]->GetEquipment()->Unequip();
+		}
 	}
 
-	// Todo, 현재 무기 Equip
+	if (DataAssets[(int32)InNewType] && DataAssets[(int32)InNewType]->GetEquipment())
+	{
+		DataAssets[(int32)InNewType]->GetEquipment()->Equip();
+	}
+
 	ChangeType(InNewType);
 }
 
