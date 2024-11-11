@@ -41,34 +41,67 @@ ACDoor::ACDoor()
 	Type = EInteractType::Red;
 }
 
+void ACDoor::OnConstruction(const FTransform& Transform)
+{
+	if (!FrameMaterial || !DoorMaterial)
+	{
+		FrameMaterial = UMaterialInstanceDynamic::Create(FrameMeshComp->GetMaterial(0), nullptr);
+		DoorMaterial = UMaterialInstanceDynamic::Create(DoorMeshComp->GetMaterial(0), nullptr);
+		CheckNull(FrameMaterial);
+		CheckNull(DoorMaterial);
+
+		FrameMeshComp->SetMaterial(0, FrameMaterial);
+		DoorMeshComp->SetMaterial(0, DoorMaterial);
+	}
+	FrameMaterial->SetVectorParameterValue("Color", Color);
+	DoorMaterial->SetVectorParameterValue("ColorDoor", Color);
+}
+
 void ACDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ACDoor::BeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this, &ACDoor::EndOverlap);
-
-	UMaterialInstanceDynamic* FrameMaterial = UMaterialInstanceDynamic::Create(FrameMeshComp->GetMaterial(0), nullptr);
-	UMaterialInstanceDynamic* DoorMaterial = UMaterialInstanceDynamic::Create(DoorMeshComp->GetMaterial(0), nullptr);
-	CheckNull(FrameMaterial);
-	CheckNull(DoorMaterial);
-
-	FrameMeshComp->SetMaterial(0, FrameMaterial);
-	DoorMeshComp->SetMaterial(0, DoorMaterial);
-	FrameMaterial->SetVectorParameterValue("Color", Color);
-	DoorMaterial->SetVectorParameterValue("ColorDoor", Color);
 }
 
 EInteractType ACDoor::OnInteract()
 {
+	if (bInteracted) return EInteractType::None;
+
 	Open();
+	SetInteracted();
 
 	return EInteractType::None;
+}
+
+void ACDoor::FailInteract()
+{
+	FString msg = "You don't have ";
+	switch (Type)
+	{
+	case EInteractType::Red:
+		msg.Append("Red Key.");
+		break;
+	case EInteractType::Blue:
+		msg.Append("Blue Key.");
+		break;
+	case EInteractType::Green:
+		msg.Append("Green Key.");
+		break;
+	}
+
+	DrawDebugString(GetWorld(), GetActorLocation(), msg, 0, FColor::White, 1.3f);
 }
 
 EInteractType ACDoor::GetType()
 {
 	return Type;
+}
+
+void ACDoor::SetInteracted()
+{
+	bInteracted = true;
 }
 
 void ACDoor::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -87,7 +120,7 @@ void ACDoor::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 		break;
 	}
 
-	DrawDebugString(GetWorld(), GetActorLocation(), msg, 0, FColor::White, 2.0f);
+	DrawDebugString(GetWorld(), GetActorLocation(), msg, 0, FColor::White, 1.3f);
 }
 
 void ACDoor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)

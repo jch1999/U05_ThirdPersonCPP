@@ -10,7 +10,8 @@
 #include "Components/CActionComponent.h"
 #include "Actions/CActionData.h"
 #include "ACtions/CEquipment.h"
-#include "Assignment/UI/CKeyWidget.h"
+#include "Assign/CKeyWidget.h"
+#include "Blueprint/UserWidget.h"
 
 ACPlayer::ACPlayer()
 {
@@ -56,6 +57,9 @@ ACPlayer::ACPlayer()
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+
+	// Widget Class
+	CHelpers::GetClass(&KeyWidgetClass, "/Game/Assignment/UI/BP_CKeyWidget");
 }
 
 void ACPlayer::BeginPlay()
@@ -77,6 +81,13 @@ void ACPlayer::BeginPlay()
 	// None Type Interact always enable
 	Keys.SetNum((int32)EInteractType::MAX);
 	Keys[(int32)EInteractType::None] = true;
+
+	// Key Widget
+	if (KeyWidgetClass)
+	{
+		KeyWidget = CreateWidget<UCKeyWidget>(GetController<APlayerController>(), KeyWidgetClass);
+		KeyWidget->AddToViewport();
+	}
 }
 
 void ACPlayer::SetBodyColor(FLinearColor InColor)
@@ -102,6 +113,14 @@ EInteractType ACPlayer::OnInteract()
 			if (getType != EInteractType::None)
 			{
 				Keys[(int32)getType] = true;
+				if (KeyWidget)
+				{
+					KeyWidget->ActiveKeyIcon((int32)getType);
+				}
+			}
+			else
+			{
+				HittedActor->FailInteract();
 			}
 		}
 	}
@@ -109,9 +128,23 @@ EInteractType ACPlayer::OnInteract()
 	return EInteractType::None;
 }
 
+void ACPlayer::FailInteract()
+{
+	return;
+}
+
 EInteractType ACPlayer::GetType()
 {
 	return EInteractType::None;
+}
+
+bool ACPlayer::IsInteracted()
+{
+	return false;
+}
+void ACPlayer::SetInteracted()
+{
+
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

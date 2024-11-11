@@ -18,11 +18,15 @@ public:
 	ACChest();
 
 protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 
 public:
 	virtual EInteractType OnInteract() override;
+	virtual void FailInteract() override;
 	virtual EInteractType GetType() override;
+	virtual void SetInteracted();
+	FORCEINLINE virtual bool IsInteracted() override { return bInteracted; }
 
 private:
 	UFUNCTION()
@@ -50,8 +54,12 @@ protected:
 	UParticleSystemComponent* ParticleComp;
 
 	UPROPERTY(EditAnywhere, Category = "Color")
-	FLinearColor Color;
+	FLinearColor Emissive;
 
 	UPROPERTY(EditAnywhere, Category = "Interact")
 	EInteractType Type;
+
+private:
+	UMaterialInstanceDynamic* DownMaterial, * UpMaterial;
+	bool bInteracted;
 };

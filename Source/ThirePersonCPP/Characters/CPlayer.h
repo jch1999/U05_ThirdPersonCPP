@@ -14,7 +14,7 @@ class UCOptionComponent;
 class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
-class CKeyWidget;
+class UCKeyWidget;
 
 UCLASS()
 class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public ICInteractableInterface
@@ -28,7 +28,10 @@ public:
 
 	// Inherited via ICCharacterInterface
 	virtual EInteractType OnInteract() override;
+	virtual void FailInteract() override;
 	virtual EInteractType GetType() override;
+	virtual bool IsInteracted() override;
+	virtual void SetInteracted() override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -99,8 +102,9 @@ protected:
 	TArray<bool> Keys;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Key")
-	TSubclassOf<CKeyWidget> KeyWidget;
+	TSubclassOf<UCKeyWidget> KeyWidgetClass;
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
+	UCKeyWidget* KeyWidget;
 };

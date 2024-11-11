@@ -49,37 +49,62 @@ ACChest::ACChest()
 	ParticleComp->SetTemplate(Particle);
 	ParticleComp->bAutoActivate = false;
 
+	bInteracted = false;
 	Type = EInteractType::Red;
 }
 
+void ACChest::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+
+	if (!DownMaterial || !UpMaterial)
+	{
+		DownMaterial = UMaterialInstanceDynamic::Create(DownMeshComp->GetMaterial(0), nullptr);
+		UpMaterial = UMaterialInstanceDynamic::Create(UpMeshComp->GetMaterial(0), nullptr);
+		CheckNull(DownMaterial);
+		CheckNull(UpMaterial);
+
+		DownMeshComp->SetMaterial(0, DownMaterial);
+		UpMeshComp->SetMaterial(0, UpMaterial);
+	}
+	/*CHelpers::GetAssetDynamic(&Material, "/Game/Assignment/Chest/MI_Chest");
+	CHelpers::GetAssetDynamic(&DownMaterial, "/Game/Assignment/Chest/MI_Chest");
+	CHelpers::GetAssetDynamic(&UpMaterial, "/Game/Assignment/Chest/MI_Chest");*/
+
+	DownMaterial->SetVectorParameterValue("Emissive", Emissive);
+	UpMaterial->SetVectorParameterValue("Emissive", Emissive);
+}
 void ACChest::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	BoxComp->OnComponentBeginOverlap.AddDynamic(this, &ACChest::BeginOverlap);
 	BoxComp->OnComponentEndOverlap.AddDynamic(this, &ACChest::EndOverlap);
-
-	UMaterialInstanceDynamic* DownMaterial = UMaterialInstanceDynamic::Create(DownMeshComp->GetMaterial(0), nullptr);
-	UMaterialInstanceDynamic* UpMaterial = UMaterialInstanceDynamic::Create(UpMeshComp->GetMaterial(0), nullptr);
-	CheckNull(UpMaterial);
-	CheckNull(DownMaterial);
-
-	UpMeshComp->SetMaterial(0, UpMaterial);
-	DownMeshComp->SetMaterial(0, DownMaterial);
-	UpMaterial->SetVectorParameterValue("Emissive", Color);
-	DownMaterial->SetVectorParameterValue("Emissive", Color);
 }
 
 EInteractType ACChest::OnInteract()
 {
+	if (bInteracted) return EInteractType::None;
+
 	Open();
+	SetInteracted();
 
 	return Type;
+}
+
+void ACChest::FailInteract()
+{
+	return;
 }
 
 EInteractType ACChest::GetType()
 {
 	return EInteractType::None;
+}
+
+void ACChest::SetInteracted()
+{
+	bInteracted = true;
 }
 
 void ACChest::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -95,7 +120,7 @@ void ACChest::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 void ACChest::Open()
 {
-	UpMeshComp->SetRelativeRotation(FRotator(110, 0, 0));
+	UpMeshComp->AddRelativeRotation(FRotator(110, 0, 0));
 	UpMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ParticleComp->Activate();
 }

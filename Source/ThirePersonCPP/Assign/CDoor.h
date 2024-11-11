@@ -7,7 +7,7 @@
 
 class UBoxComponent;
 class UStaticMeshComponent;
-class UParticleSystemComponent;
+class UMaterialInstanceDynamic;
 
 UCLASS()
 class THIREPERSONCPP_API ACDoor : public AActor, public ICInteractableInterface
@@ -18,11 +18,16 @@ public:
 	ACDoor();
 
 protected:
+	virtual void OnConstruction(const FTransform& Transform) override;
 	virtual void BeginPlay() override;
 
 public:
 	virtual EInteractType OnInteract() override;
+	virtual void FailInteract() override;
 	virtual EInteractType GetType() override;
+	virtual void SetInteracted() override;
+	FORCEINLINE virtual bool IsInteracted() override { return bInteracted; }
+
 private:
 	UFUNCTION()
 	void BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -50,4 +55,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Interact")
 	EInteractType Type;
+
+private:
+	UMaterialInstanceDynamic* FrameMaterial, * DoorMaterial;
+	bool bInteracted;
 };
