@@ -1,11 +1,21 @@
 #include "CActionData.h"
-#include "CEquipment.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
+#include "CEquipment.h"
+#include "CAttachment.h"
 
 void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 {
 	CheckNull(InOwnerCharacter);
+
+	if (AttachmentClass)
+	{
+		FTransform TM;
+
+		Attachment = InOwnerCharacter->GetWorld()->SpawnActorDeferred<ACAttachment>(AttachmentClass, TM, InOwnerCharacter, nullptr);
+		Attachment->SetActorLabel(MakeLabel(InOwnerCharacter, "Attachment"));
+		Attachment->FinishSpawning(TM);
+	}
 
 	if (EquipmentClass)
 	{
@@ -16,6 +26,12 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 		Equipment->SetColor(EquipmentColor);
 		Equipment->SetActorLabel(MakeLabel(InOwnerCharacter, "Equipment"));
 		Equipment->FinishSpawning(TM);
+
+		if (Attachment)
+		{
+			Equipment->OnEquipmentDelegate.AddDynamic(Attachment, &ACAttachment::OnEquip);
+			Equipment->OnUnequipmentDelegate.AddDynamic(Attachment, &ACAttachment::OnUnequip);
+		}
 	}
 }
 
