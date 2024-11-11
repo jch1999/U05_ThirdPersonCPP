@@ -10,6 +10,7 @@
 #include "Components/CActionComponent.h"
 #include "Actions/CActionData.h"
 #include "ACtions/CEquipment.h"
+#include "Assignment/UI/CKeyWidget.h"
 
 ACPlayer::ACPlayer()
 {
@@ -72,12 +73,45 @@ void ACPlayer::BeginPlay()
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
 
 	ActionComp->SetUnarmedMode();
+
+	// None Type Interact always enable
+	Keys.SetNum((int32)EInteractType::MAX);
+	Keys[(int32)EInteractType::None] = true;
 }
 
 void ACPlayer::SetBodyColor(FLinearColor InColor)
 {
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
+}
+
+EInteractType ACPlayer::OnInteract()
+{
+	FHitResult Hit;
+	FVector Start = GetActorLocation();
+	FVector End = GetActorLocation() + GetActorForwardVector() * 100.0f;
+	
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Visibility))
+	{
+		ICInteractableInterface* HittedActor = Cast<ICInteractableInterface>(Hit.GetActor());
+		if (!HittedActor)return EInteractType::None;
+
+		if (Keys[(int32)HittedActor->GetType()])
+		{
+			EInteractType getType=HittedActor->OnInteract();
+			if (getType != EInteractType::None)
+			{
+				Keys[(int32)getType] = true;
+			}
+		}
+	}
+
+	return EInteractType::None;
+}
+
+EInteractType ACPlayer::GetType()
+{
+	return EInteractType::None;
 }
 
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -100,7 +134,14 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("MagicBall", IE_Pressed, this, &ACPlayer::OnMagicBall);
 	PlayerInputComponent->BindAction("Warp", IE_Pressed, this, &ACPlayer::OnWarp);
 	PlayerInputComponent->BindAction("WhirlWind", IE_Pressed, this, &ACPlayer::OnWhirlWind);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &ACPlayer::OnInteracting);
 }
+
+//void ACPlayer::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+//{
+//	Super::PostEditChangeProperty(PropertyChangedEvent);
+//}
 
 void ACPlayer::OnMoveForward(float Axis)
 {
@@ -211,7 +252,10 @@ void ACPlayer::OnWhirlWind()
 
 	ActionComp->SetWhirlWindMode();
 }
-
+void ACPlayer::OnInteracting()
+{
+	OnInteract();
+}
 void ACPlayer::Begin_Roll()
 {
 	bUseControllerRotationYaw = false;

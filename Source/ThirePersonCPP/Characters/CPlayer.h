@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "Components/CStateComponent.h"
 #include "Interfaces/CCharacterInterface.h"
+#include "Interfaces/CInteractableInterface.h"
 #include "CPlayer.generated.h"
 
 class USpringArmComponent;
@@ -13,9 +14,10 @@ class UCOptionComponent;
 class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
+class CKeyWidget;
 
 UCLASS()
-class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface
+class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public ICInteractableInterface
 {
 	GENERATED_BODY()
 
@@ -24,11 +26,17 @@ public:
 	// Inherited via ICCharacterInterface
 	virtual void SetBodyColor(FLinearColor InColor) override;
 
+	// Inherited via ICCharacterInterface
+	virtual EInteractType OnInteract() override;
+	virtual EInteractType GetType() override;
+
 protected:
 	virtual void BeginPlay() override;
 
 public:	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 
 private:
 	void OnMoveForward(float Axis);
@@ -48,6 +56,8 @@ private:
 	void OnWarp();
 	void OnWhirlWind();
 
+	void OnInteracting();
+
 private:
 	void Begin_Roll();
 	void Begin_Backstep();
@@ -58,6 +68,7 @@ public:
 	void End_Roll();
 	void End_Backstep();
 
+	FORCEINLINE bool IsInteractable(EInteractType InType) { return Keys[(int32)InType]; }
 private:
 	UFUNCTION()
 	void OnStateTypeChanged(EStateType InPrevType, EStateType InNewType);
@@ -84,6 +95,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
 
+	UPROPERTY(VisibleInstanceOnly,Category="Key")
+	TArray<bool> Keys;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Key")
+	TSubclassOf<CKeyWidget> KeyWidget;
 private:
 	UMaterialInstanceDynamic* BodyMaterial;
 	UMaterialInstanceDynamic* LogoMaterial;
