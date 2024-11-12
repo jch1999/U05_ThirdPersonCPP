@@ -118,7 +118,7 @@ void ACChest::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Other
 
 }
 
-void ACChest::Open()
+void ACChest::Open_Implementation()
 {
 	UpMeshComp->AddRelativeRotation(FRotator(110, 0, 0));
 	UpMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);

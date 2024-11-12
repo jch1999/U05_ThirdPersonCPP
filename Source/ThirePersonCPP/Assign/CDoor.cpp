@@ -120,14 +120,28 @@ void ACDoor::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* Othe
 		break;
 	}
 
-	DrawDebugString(GetWorld(), GetActorLocation(), msg, 0, FColor::White, 1.3f);
+	DrawDebugString(GetWorld(), GetActorLocation(), msg, 0, FColor::White, 0.8f);
 }
 
 void ACDoor::EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 }
 
-void ACDoor::Open()
+void ACDoor::Open_Implementation()
 {
-	DoorMeshComp->AddRelativeRotation(FRotator(0, -90, 0));
+	NowRot = DoorMeshComp->GetRelativeRotation();
+	TargetRot = NowRot + FRotator(0, -90, 0);
+
+	GetWorld()->GetTimerManager().SetTimer(OpenTimer, this, &ACDoor::OpenLerp, 0.1f, true, 0.03f);
+	//DoorMeshComp->AddRelativeRotation(FRotator(0, -90, 0));
+}
+
+void ACDoor::OpenLerp()
+{
+	NowRot = FMath::Lerp(NowRot, TargetRot, 0.15f);
+	DoorMeshComp->SetRelativeRotation(NowRot);
+	if ((NowRot.Vector()-TargetRot.Vector()).IsNearlyZero())
+	{
+		GetWorld()->GetTimerManager().ClearTimer(OpenTimer);
+	}
 }

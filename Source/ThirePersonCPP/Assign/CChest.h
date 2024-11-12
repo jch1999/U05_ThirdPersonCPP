@@ -35,6 +35,8 @@ private:
 	UFUNCTION()
 	void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+protected:
+	UFUNCTION(BlueprintNativeEvent)
 	void Open();
 
 protected:

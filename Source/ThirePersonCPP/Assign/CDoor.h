@@ -35,7 +35,10 @@ private:
 	UFUNCTION()
 	void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+protected:
+	UFUNCTION(BlueprintNativeEvent)
 	void Open();
+	void OpenLerp();
 
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
@@ -59,4 +62,6 @@ protected:
 private:
 	UMaterialInstanceDynamic* FrameMaterial, * DoorMaterial;
 	bool bInteracted;
+	FTimerHandle OpenTimer;
+	FRotator NowRot, TargetRot;
 };

@@ -118,10 +118,10 @@ EInteractType ACPlayer::OnInteract()
 					KeyWidget->ActiveKeyIcon((int32)getType);
 				}
 			}
-			else
-			{
-				HittedActor->FailInteract();
-			}
+		}
+		else
+		{
+			HittedActor->FailInteract();
 		}
 	}
 
