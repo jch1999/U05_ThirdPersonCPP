@@ -24,6 +24,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	void PrimaryAction();
 	
 public:
 	UFUNCTION(BlueprintCallable)

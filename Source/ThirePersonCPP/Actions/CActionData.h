@@ -8,7 +8,13 @@ class UAnimMontage;
 class ACharacter;
 class ACEquipment;
 class ACAttachment;
+class ACDoAction;
+class UParticleSystem;
+class UCameraShake;
 
+// ----------------------------------------------------------------------------
+// struct FEquipmentData
+// ----------------------------------------------------------------------------
 USTRUCT(BlueprintType)
 struct FEquipmentData
 {
@@ -31,6 +37,34 @@ public:
 	bool bUseControlRotation = true;
 };
 
+// ----------------------------------------------------------------------------
+// struct FActionData
+// ----------------------------------------------------------------------------
+USTRUCT(BlueprintType)
+struct FActionData : public FEquipmentData
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	float Damage = 5.0f;
+
+	UPROPERTY(EditAnywhere)
+	float HitStop;
+	
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* Effect;
+
+	UPROPERTY(EditAnywhere)
+	FTransform EfeectTransform;
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCameraShake> CameraShakeClass;
+};
+
+// ----------------------------------------------------------------------------
+// class UCActionData
+// ----------------------------------------------------------------------------
 UCLASS()
 class THIREPERSONCPP_API UCActionData : public UDataAsset
 {
@@ -41,6 +75,7 @@ public:
 
 public:
 	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
+	FORCEINLINE ACDoAction* GetDoAction() { return DoAction; }
 private:
 	FString MakeLabel(ACharacter* InOwnerCharacter,FString InMiddleName);
 
@@ -59,7 +94,15 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Attachment")
 	TSubclassOf<ACAttachment> AttachmentClass;
 
+	// DoAction
+	UPROPERTY(EditAnywhere, Category = "DoAction")
+	TSubclassOf<ACDoAction> DoActionClass;
+	
+	UPROPERTY(EditAnywhere, Category = "DoAction")
+	TArray<FActionData> DoActionDatas;
+
 private:
 	ACEquipment* Equipment;
 	ACAttachment* Attachment;
+	ACDoAction* DoAction;
 };
