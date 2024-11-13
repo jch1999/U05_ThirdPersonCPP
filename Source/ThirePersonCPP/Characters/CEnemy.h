@@ -9,6 +9,8 @@ class UCAttributeComponent;
 class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
+class UWidgetComponent;
+
 UCLASS()
 class THIREPERSONCPP_API ACEnemy : public ACharacter, public ICCharacterInterface
 {
@@ -19,6 +21,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+public:
+	// Inherited via ICCharacterInterface
+	virtual void SetBodyColor(FLinearColor InColor);
 
 protected:	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
@@ -33,8 +39,11 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
 
-	// Inherited via ICCharacterInterface
-	virtual void SetBodyColor(FLinearColor InColor);
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UWidgetComponent* NameWidgetComp;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UWidgetComponent* HealthWidgetComp;
 
 private:
 	UMaterialInstanceDynamic* BodyMaterial;

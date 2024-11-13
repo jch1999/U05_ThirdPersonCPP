@@ -4,7 +4,10 @@
 #include "GameFramework/Actor.h"
 #include "CAttachment.generated.h"
 
-class CPlayer;
+class ACharacter;
+class UShapeComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParames(FAttachmentOverlap, ACharacter*, InAttacker, AActor*, InCauser, ACharacter*, InOtherCharacter);
 
 UCLASS()
 class THIREPERSONCPP_API ACAttachment : public AActor
@@ -28,10 +31,31 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnUnequip();
 
+public:
+	void OnCollision();
+	void OffCollision();
+
+public:
+	UFUNCTION()
+	void OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnComponentEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+public:
+	UPROPERTY(BlueprintAssignable)
+		FAttachmentOverlap OnAttachmentBeginOverlap;
+
+	UPROPERTY(BlueprintAssignable)
+		FAttachmentOverlap OnAttachmentEndOverlap;
+
 protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	USceneComponent* RootComp;
 
 	UPROPERTY(BlueprintReadOnly)
 	ACharacter* OwnerCharacter;
+
+private:
+	TArray<UShapeComponent*> ShapeComponents;
 };

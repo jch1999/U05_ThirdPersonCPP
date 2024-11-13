@@ -30,6 +30,14 @@ public:
 	virtual void Begin_PrimaryAction() {};
 	virtual void End_PrimaryAction() {};
 
+public:
+	UFUNCTION()
+	virtual void OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
+
+	UFUNCTION()
+	virtual void OnAttachmentEndOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter) {};
+	// Attachment->Delegate.AddDynamic(DoAction, Func)
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category="DoAction")
 	ACharacter* OwnerCharacter;
