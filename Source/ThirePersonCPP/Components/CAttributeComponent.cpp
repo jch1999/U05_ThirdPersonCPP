@@ -28,3 +28,15 @@ void UCAttributeComponent::SetStop()
 {
 	bCanMove = false;
 }
+
+void UCAttributeComponent::IncreaseHealth(float InAmount)
+{
+	CurrentHealth += InAmount;
+	CurrentHealth=FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+}
+
+void UCAttributeComponent::DecreaseHealth(float InAmount)
+{
+	CurrentHealth -= InAmount;
+	CurrentHealth = FMath::Clamp(CurrentHealth, 0.0f, MaxHealth);
+}

@@ -1,7 +1,7 @@
 #include "CAttachment.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
-#include "Comopnents/ShapeComponent.h"
+#include "Components/ShapeComponent.h"
 
 ACAttachment::ACAttachment()
 {
@@ -12,13 +12,15 @@ void ACAttachment::BeginPlay()
 {
 	OwnerCharacter = Cast<ACharacter>(GetOwner());
 	
-	GetComponents<UShapeComponent*>(ShapeComponents);
+	GetComponents<UShapeComponent>(ShapeComponents);
 
 	for (const auto& Comp : ShapeComponents)
 	{
 		Comp->OnComponentBeginOverlap.AddDynamic(this, &ACAttachment::OnComponentBeginOverlap);
 		Comp->OnComponentEndOverlap.AddDynamic(this, &ACAttachment::OnComponentEndOverlap);
 	}
+	
+	OffCollision();
 
 	Super::BeginPlay();
 }

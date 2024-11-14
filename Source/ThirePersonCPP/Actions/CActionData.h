@@ -75,6 +75,7 @@ public:
 
 public:
 	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
+	FORCEINLINE ACAttachment* GetAttachment() { return Attachment; }
 	FORCEINLINE ACDoAction* GetDoAction() { return DoAction; }
 private:
 	FString MakeLabel(ACharacter* InOwnerCharacter,FString InMiddleName);

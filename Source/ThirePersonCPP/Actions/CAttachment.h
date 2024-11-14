@@ -7,7 +7,7 @@
 class ACharacter;
 class UShapeComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParames(FAttachmentOverlap, ACharacter*, InAttacker, AActor*, InCauser, ACharacter*, InOtherCharacter);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FAttachmentOverlap, ACharacter*, InAttacker, AActor*, InCauser, ACharacter*, InOtherCharacter);
 
 UCLASS()
 class THIREPERSONCPP_API ACAttachment : public AActor

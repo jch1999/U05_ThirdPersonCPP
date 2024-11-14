@@ -4,7 +4,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/CAttributeComponent.h"
-#include "Components/CStateComponent.h"
 #include "Components/CMontagesComponent.h"
 #include "Components/CActionComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -66,6 +65,9 @@ ACEnemy::ACEnemy()
 	// Movement Comp
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+
+	// Property Settings
+	LaunchValue = 30.0f;
 }
 
 void ACEnemy::BeginPlay()
@@ -81,6 +83,7 @@ void ACEnemy::BeginPlay()
 
 
 	// On StateType Changed
+	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
 	ActionComp->SetUnarmedMode();
 
 	// Widget Settings
@@ -99,9 +102,74 @@ void ACEnemy::BeginPlay()
 	}
 }
 
+float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float ActualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	DamageInstigator = EventInstigator;
+	DamageValue = ActualDamage;
+
+	AttributeComp->DecreaseHealth(Damage);
+
+	if (AttributeComp->GetCurrentHealth() <= 0.0f)
+	{
+		StateComp->SetDeadMode();
+		return ActualDamage;
+	}
+
+	StateComp->SetHittedMode();
+
+	return ActualDamage;
+}
+
 void ACEnemy::SetBodyColor(FLinearColor InColor)
 {
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
+}
+
+void ACEnemy::OnStateTypeChanged(EStateType InPrevType, EStateType InNewType)
+{
+	switch (InNewType)
+	{
+		case EStateType::Hitted:
+		{
+			Hitted();
+		}
+		break;
+		
+		case EStateType::Dead:
+		{
+			Dead();
+		}
+		break;
+	}
+}
+
+void ACEnemy::Hitted()
+{
+	//Update Health Widget
+	UCHealthWidget* HealthWidgetObject = Cast<UCHealthWidget>(HealthWidgetComp ->GetUserWidgetObject());
+	
+	if (HealthWidgetObject)
+	{
+		HealthWidgetObject->Update(AttributeComp->GetCurrentHealth(), AttributeComp->GetMaxHealth());
+	}
+
+	// Play Hitted Montage
+	MontagesComp->PlayHitted();
+
+	// HitBack
+	FVector Start = DamageInstigator->GetPawn()->GetActorLocation();
+	FVector Target = GetActorLocation();
+	FVector LaunchDirection=(Target - Start).GetSafeNormal();
+	LaunchCharacter(LaunchDirection * DamageValue * LaunchValue, true, false);
+}
+
+void ACEnemy::Dead()
+{
+	FString Message = GetName();
+	Message.Append(" is Dead!");
+	CLog::Print(Message,-1,2.0f,FColor::Red);
 }
 

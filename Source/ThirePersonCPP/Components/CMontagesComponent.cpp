@@ -31,6 +31,18 @@ void UCMontagesComponent::BeginPlay()
 			}
 		}
 	}
+
+	for (int32 i = 0; i < (int32)EStateType::Max; ++i)
+	{
+		if (Datas[i])
+		{
+			CLog::Log(FString::FromInt(i) + " : " + Datas[i]->AnimMontage->GetName());
+		}
+		else
+		{
+			CLog::Log(FString::FromInt(i) + " is nullptr");
+		}
+	}
 }
 
 void UCMontagesComponent::PlayRoll()
@@ -43,15 +55,24 @@ void UCMontagesComponent::PlayBackstep()
 	PlayAnimMontage(EStateType::Backstep);
 }
 
+void UCMontagesComponent::PlayHitted()
+{
+	PlayAnimMontage(EStateType::Hitted);
+}
+
 void UCMontagesComponent::PlayAnimMontage(EStateType InType)
 {
 	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
 	CheckNull(OwnerCharacter);
 
+	PrintLine();
 	const FMontageData* Data = Datas[(int32)InType];
 	
+	if (!Data) CLog::Log("Data is null");
+
 	if (Data && Data->AnimMontage)
 	{
+		
 		OwnerCharacter->PlayAnimMontage(Data->AnimMontage, Data->PlayRate, Data->StartSection);
 	}
 }

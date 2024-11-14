@@ -23,9 +23,12 @@ public:
 	FORCEINLINE float GetWalkSpeed() { return WalkSpeed; }
 	FORCEINLINE float GetSprintSpeed() { return SprintSpeed; }
 	FORCEINLINE bool IsCanMove() { return bCanMove; }
-	
+
 	void SetMove();
 	void SetStop();
+
+	void IncreaseHealth(float InAmount);
+	void DecreaseHealth(float InAmount);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "Health")
