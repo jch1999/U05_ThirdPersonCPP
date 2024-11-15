@@ -9,6 +9,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "UI/CNameWidget.h"
 #include "UI/CHealthWidget.h"
+#include "Actions/CActionData.h"
 
 ACEnemy::ACEnemy()
 {
@@ -124,6 +125,15 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContro
 
 void ACEnemy::SetBodyColor(FLinearColor InColor)
 {
+	CheckTrue(StateComp->IsDeadMode());
+
+	if (StateComp->IsHittedMode())
+	{
+		LogoMaterial->SetScalarParameterValue("bHitted", 1.0f);
+		LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
+		return;
+	}
+
 	BodyMaterial->SetVectorParameterValue("BodyColor", InColor);
 	LogoMaterial->SetVectorParameterValue("BodyColor", InColor);
 }
@@ -164,6 +174,10 @@ void ACEnemy::Hitted()
 	FVector Target = GetActorLocation();
 	FVector LaunchDirection=(Target - Start).GetSafeNormal();
 	LaunchCharacter(LaunchDirection * DamageValue * LaunchValue, true, false);
+
+	// Change Log color
+	SetBodyColor(FLinearColor::Red * 1000.0f);
+	UKismetSystemLibrary::K2_SetTimer(this, "RestoreBodyColor", 0.5f, false);
 }
 
 void ACEnemy::Dead()
@@ -171,5 +185,19 @@ void ACEnemy::Dead()
 	FString Message = GetName();
 	Message.Append(" is Dead!");
 	CLog::Print(Message,-1,2.0f,FColor::Red);
+}
+
+void ACEnemy::RestoreBodyColor()
+{
+	LogoMaterial->SetScalarParameterValue("bHitted", 0.0f);
+
+	if (ActionComp->GetCurrentDataAsset())
+	{
+		FLinearColor EquipmentColor = ActionComp->GetCurrentDataAsset()->EquipmentColor;
+		LogoMaterial->SetVectorParameterValue("BodyColor", EquipmentColor);
+		return;
+	}
+
+	LogoMaterial->SetVectorParameterValue("BodyColor", FLinearColor::White);
 }
 

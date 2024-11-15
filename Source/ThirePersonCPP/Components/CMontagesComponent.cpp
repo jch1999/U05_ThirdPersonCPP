@@ -65,7 +65,6 @@ void UCMontagesComponent::PlayAnimMontage(EStateType InType)
 	ACharacter* OwnerCharacter = Cast<ACharacter>(GetOwner());
 	CheckNull(OwnerCharacter);
 
-	PrintLine();
 	const FMontageData* Data = Datas[(int32)InType];
 	
 	if (!Data) CLog::Log("Data is null");
