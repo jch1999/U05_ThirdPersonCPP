@@ -56,7 +56,7 @@ public:
 	UParticleSystem* Effect;
 
 	UPROPERTY(EditAnywhere)
-	FTransform EfeectTransform;
+	FTransform EffectTransform;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCameraShake> CameraShakeClass;
