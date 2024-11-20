@@ -27,10 +27,22 @@ void ACAttachment::BeginPlay()
 
 void ACAttachment::ActorAttachTo(FName InSocketName)
 {
+	// AActor::AttachToComponent
 	AttachToComponent
 	(
 		OwnerCharacter->GetMesh(), 
 		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true), 
+		InSocketName
+	);
+}
+
+void ACAttachment::ComponentAttachTo(USceneComponent* InComp, FName InSocketName)
+{
+	// USceneComponent::AttachToComponent
+	InComp->AttachToComponent
+	(
+		OwnerCharacter->GetMesh(),
+		FAttachmentTransformRules(EAttachmentRule::KeepRelative, true),
 		InSocketName
 	);
 }
