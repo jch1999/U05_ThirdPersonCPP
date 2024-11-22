@@ -9,7 +9,16 @@ void ACDoAction_MagicBall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Aim=NewObject<UCAim>(,)
+	Aim = NewObject<UCAim>();
+	Aim->Initialize(OwnerCharacter);
+}
+
+void ACDoAction_MagicBall::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	CheckNull(Aim);
+	Aim->Tick(DeltaTime);
 }
 
 void ACDoAction_MagicBall::PrimaryAction()
@@ -18,7 +27,12 @@ void ACDoAction_MagicBall::PrimaryAction()
 
 	CheckFalse(Datas.Num() > 0);
 	CheckFalse(StateComp->IsIdleMode());
-	
+
+	if (Aim->IsAvliable())
+	{
+		CheckFalse(Aim->IsZooming());
+	}
+
 	StateComp->SetActionMode();
 
 	OwnerCharacter->PlayAnimMontage(Datas[0].Montage, Datas[0].PlayRate, Datas[0].StartSection);
@@ -34,4 +48,16 @@ void ACDoAction_MagicBall::End_PrimaryAction()
 {
 	StateComp->SetIdleMode();
 	AttributeComp->SetMove();
+}
+
+void ACDoAction_MagicBall::Begin_SecondaryAction()
+{
+	CheckNull(Aim);
+	Aim->On();
+}
+
+void ACDoAction_MagicBall::End_SecondaryAction()
+{
+	CheckNull(Aim);
+	Aim->Off();
 }
