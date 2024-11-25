@@ -23,6 +23,10 @@ public:
 	virtual void Begin_SecondaryAction() override;
 	virtual void End_SecondaryAction() override;
 
+public:
+	UFUNCTION()
+	void OnProjectileBeginOverlap(const FHitResult& InHitResult);
+
 private:
 	UPROPERTY()
 	UCAim* Aim;

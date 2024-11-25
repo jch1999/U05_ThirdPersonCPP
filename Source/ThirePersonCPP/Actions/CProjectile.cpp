@@ -1,27 +1,36 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "CProjectile.h"
+#include "Global.h"
+#include "Components/SphereComponent.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
-// Sets default values
 ACProjectile::ACProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	CHelpers::CreateSceneComponent(this, &SphereComp, "SphereComp");
+	CHelpers::CreateSceneComponent(this, &ParticleComp, "ParticleComp", SphereComp);
 
+	CHelpers::CreateActorComponent(this, &MovementComp, "MovementComp");
+
+	InitialLifeSpan = 5.0f;
+
+	MovementComp->InitialSpeed = 4000.0f;
+	MovementComp->MaxSpeed = 8000.0f;
+	MovementComp->ProjectileGravityScale = 0.0f;
 }
 
-// Called when the game starts or when spawned
 void ACProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ACProjectile::ProjectileBeginOverlap);
 }
 
-// Called every frame
-void ACProjectile::Tick(float DeltaTime)
+void ACProjectile::ProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	Super::Tick(DeltaTime);
+	CheckTrue(OtherActor == GetOwner());
 
+	OnProjectileBeginOverlap.Broadcast(SweepResult);
+	Destroy();
 }
+
 
