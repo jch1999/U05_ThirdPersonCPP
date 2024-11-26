@@ -20,6 +20,7 @@ void UCActionComponent::BeginPlay()
 		for (int32 i = 0; i < (int32)EActionType::Max; i++)
 		{
 			if (!DataAssets[i])continue;
+
 			DataAssets[i]->BeginPlay(OwnerCharacter);
 		}
 	}
