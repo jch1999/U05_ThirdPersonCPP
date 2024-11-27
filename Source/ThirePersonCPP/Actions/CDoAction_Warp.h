@@ -23,6 +23,7 @@ public:
 
 private:
 	bool GetCursorLocation(FVector& OutLocation);
+	void SetPreviewMeshColor(FLinearColor InColor);
 
 private:
 	USkeletalMeshComponent* PreviewMeshComp;

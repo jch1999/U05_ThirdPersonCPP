@@ -44,6 +44,11 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 		DoAction->SetActorLabel(MakeLabel(InOwnerCharacter, "DoAction"));
 		DoAction->FinishSpawning(TM);
 
+		if (Equipment)
+		{
+			DoAction->SetEquipment(Equipment->IsEquipped());
+		}
+
 		if (Attachment)
 		{
 			Attachment->OnAttachmentBeginOverlap.AddDynamic(DoAction, &ACDoAction::OnAttachmentBeginOverlap);

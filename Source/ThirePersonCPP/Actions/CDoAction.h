@@ -25,6 +25,7 @@ public:
 
 public:
 	void SetDatas(TArray<FActionData>& InDatas);
+	void SetEquipment(const bool* InEquipment);
 
 	virtual void PrimaryAction() {};
 	virtual void Begin_PrimaryAction() {};

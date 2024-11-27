@@ -31,3 +31,8 @@ void ACDoAction::SetDatas(TArray<FActionData>& InDatas)
 	Datas = InDatas;
 }
 
+void ACDoAction::SetEquipment(const bool* InEquipment)
+{
+	bEquipped = InEquipment;
+}
+
