@@ -18,14 +18,14 @@ void ACDoAction_Warp::BeginPlay()
 		}
 	}
 
-	for (const auto& Child : OwnerCharacter->Children)
+	/*for (const auto& Child : OwnerCharacter->Children)
 	{
 		if (Child->IsA<ACEquipment>() && Child->GetActorLabel().Contains("Warp"))
 		{
-			Cast<ACEquipment>(Child).OnEquip
+			Cast<ACEquipment>(Child).OnEquip()
 			break;
 		}
-	}
+	}*/
 }
 
 void ACDoAction_Warp::Tick(float DelatTime)
@@ -48,6 +48,7 @@ void ACDoAction_Warp::PrimaryAction()
 {
 	Super::PrimaryAction();
 
+	CheckFalse(Datas.Num() > 0);
 	CheckFalse(StateComp->IsIdleMode());
 
 	StateComp->SetActionMode();
