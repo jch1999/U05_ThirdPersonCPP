@@ -16,7 +16,8 @@ public class ThirePersonCPP : ModuleRules
 			"CoreUObject", 
 			"Engine", 
 			"InputCore", 
-			"UMG" 
+			"UMG",
+			"AIModule"
 		});
 	}
 }

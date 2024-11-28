@@ -92,7 +92,7 @@ void ACEnemy::BeginPlay()
 
 	// On StateType Changed
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACEnemy::OnStateTypeChanged);
-	ActionComp->SetUnarmedMode();
+	// ActionComp->SetUnarmedMode();
 
 	// Widget Settings
 	NameWidgetComp->InitWidget();

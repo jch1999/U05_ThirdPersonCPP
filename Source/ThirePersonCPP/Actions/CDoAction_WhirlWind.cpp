@@ -5,6 +5,7 @@
 #include "Components/CAttributeComponent.h"
 #include "Components/BoxComponent.h"
 #include "CAttachment.h"
+#include "Particles/ParticleSystemComponent.h"
 
 ACDoAction_WhirlWind::ACDoAction_WhirlWind()
 {
@@ -29,13 +30,15 @@ void ACDoAction_WhirlWind::BeginPlay()
 
 	CheckNull(BoxComp);
 	ACAttachment* Attachment = Cast<ACAttachment>(BoxComp->GetOwner());
-	CheckNull(Attachment)
+	CheckNull(Attachment);
 	Attachment->OffCollision();
 }
 
 void ACDoAction_WhirlWind::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// CheckFalse(*bEquipped);
 
 	FVector Center = OwnerCharacter->GetActorLocation();
 
@@ -68,6 +71,27 @@ void ACDoAction_WhirlWind::PrimaryAction()
 void ACDoAction_WhirlWind::Begin_PrimaryAction()
 {
 	Super::Begin_PrimaryAction();
+
+	CurrentYaw = OwnerCharacter->GetActorForwardVector().Rotation().Yaw;
+
+	if (BoxComp)
+	{
+		// Attack FX
+		if (Datas.Num() > 0 && Datas[0].Effect)
+		{
+			EffectComp = UGameplayStatics::SpawnEmitterAttached(Datas[0].Effect, BoxComp, NAME_None);
+
+			EffectComp->SetRelativeTransform(Datas[0].EffectTransform);
+		}
+
+		// OnCollision
+		ACAttachment* Attachment = Cast<ACAttachment>(BoxComp->GetOwner());
+		CheckNull(Attachment);
+		Attachment->OnCollision();
+
+		// TickDamage Timer
+		UKismetSystemLibrary::K2_SetTimer(this, "TickDamage", DamageToTime, true, DamageToTime);
+	}
 }
 
 void ACDoAction_WhirlWind::End_PrimaryAction()
@@ -76,6 +100,11 @@ void ACDoAction_WhirlWind::End_PrimaryAction()
 
 	StateComp->SetIdleMode();
 	AttributeComp->SetMove();
+
+	// Deativate Timer
+	FTimerDynamicDelegate DeactivateDelegate;
+	DeactivateDelegate.BindUFunction(this, "Deactivate");
+	UKismetSystemLibrary::K2_SetTimerDelegate(DeactivateDelegate, ActiveTime, false);
 }
 
 void ACDoAction_WhirlWind::Abort()
@@ -95,4 +124,48 @@ void ACDoAction_WhirlWind::OnAttachmentEndOverlap(ACharacter* InAttacker, AActor
 	Super::OnAttachmentEndOverlap(InAttacker, InCauser, InOtherCharacter);
 
 	HittedCharacters.Remove(InOtherCharacter);
+}
+
+void ACDoAction_WhirlWind::TickDamage()
+{
+	CheckFalse(HittedCharacters.Num() > 0);
+
+	FDamageEvent DamageEvent;
+	UCStateComponent* OtherStateComp = nullptr;
+	for (int32 i = 0; i < HittedCharacters.Num(); ++i)
+	{
+		if (HittedCharacters[i])
+		{
+			OtherStateComp = CHelpers::GetComponent<UCStateComponent>(HittedCharacters[i]);
+		}
+
+		bool bIgnore = false;
+		bIgnore |= (OtherStateComp == nullptr);
+		bIgnore |= (OtherStateComp->IsDeadMode());
+		bIgnore |= (HittedCharacters[i]->IsPendingKill());
+		bIgnore |= (HittedCharacters[i] == nullptr);
+
+		if (bIgnore)
+		{
+			continue;
+		}
+
+		HittedCharacters[i]->TakeDamage(Datas[0].Damage, DamageEvent, OwnerCharacter->GetController(), this);
+	}
+}
+
+void ACDoAction_WhirlWind::Deactivate()
+{
+	bActivation = false;
+
+	EffectComp->DestroyComponent();
+
+	// Off Collision
+	ACAttachment* Attachment = Cast<ACAttachment>(BoxComp->GetOwner());
+	if (Attachment)
+	{
+		Attachment->OffCollision();
+	}
+
+	UKismetSystemLibrary::K2_ClearTimer(this, "TickDamage");
 }
