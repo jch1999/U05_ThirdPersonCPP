@@ -2,7 +2,7 @@
 #include "Global.h"
 #include "Actions/CDoAction.h"
 #include "Actions/CDoAction_Melee.h"
-#include "Actions/CActionData.h"
+#include "Actions/CActionObject.h"
 #include "Components/CActionComponent.h"
 
 FString UCAnimNotifyState_Combo::GetNotifyName_Implementation() const
@@ -18,10 +18,10 @@ void UCAnimNotifyState_Combo::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACDoAction* DoAction = ActionData->GetDoAction();
+	ACDoAction* DoAction = ActionObject->GetDoAction();
 	CheckNull(DoAction);
 
 	ACDoAction_Melee* Melee = Cast<ACDoAction_Melee>(DoAction);
@@ -38,10 +38,10 @@ void UCAnimNotifyState_Combo::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACDoAction* DoAction = ActionData->GetDoAction();
+	ACDoAction* DoAction = ActionObject->GetDoAction();
 	CheckNull(DoAction);
 
 	ACDoAction_Melee* Melee = Cast<ACDoAction_Melee>(DoAction);

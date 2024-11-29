@@ -3,7 +3,7 @@
 #include "Actions/CAttachment.h"
 #include "Actions/CDoAction.h"
 #include "Actions/CDoAction_Melee.h"
-#include "Actions/CActionData.h"
+#include "Actions/CActionObject.h"
 #include "Components/CActionComponent.h"
 
 FString UCAnimNotifyState_Collision::GetNotifyName_Implementation() const
@@ -19,10 +19,10 @@ void UCAnimNotifyState_Collision::NotifyBegin(USkeletalMeshComponent* MeshComp, 
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 	
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACAttachment* Attachment = ActionData->GetAttachment();
+	ACAttachment* Attachment = ActionObject->GetAttachment();
 	CheckNull(Attachment);
 
 	Attachment->OnCollision();
@@ -36,15 +36,15 @@ void UCAnimNotifyState_Collision::NotifyEnd(USkeletalMeshComponent* MeshComp, UA
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACAttachment* Attachment = ActionData->GetAttachment();
+	ACAttachment* Attachment = ActionObject->GetAttachment();
 	CheckNull(Attachment);
 
 	Attachment->OffCollision();
 
-	ACDoAction_Melee* Melee = Cast<ACDoAction_Melee>(ActionData->GetDoAction());
+	ACDoAction_Melee* Melee = Cast<ACDoAction_Melee>(ActionObject->GetDoAction());
 	CheckNull(Melee);
 
 	Melee->ClearHittedCharacters();

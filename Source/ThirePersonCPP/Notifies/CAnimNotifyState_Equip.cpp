@@ -1,7 +1,7 @@
 #include "CAnimNotifyState_Equip.h"
 #include "global.h"
 #include "Actions/CEquipment.h"
-#include "Actions/CActionData.h"
+#include "Actions/CActionObject.h"
 #include "Components/CActionComponent.h"
 
 FString UCAnimNotifyState_Equip::GetNotifyName_Implementation() const
@@ -17,10 +17,10 @@ void UCAnimNotifyState_Equip::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 	
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACEquipment* Equipment = ActionData->GetEquipment();
+	ACEquipment* Equipment = ActionObject->GetEquipment();
 	CheckNull(Equipment);
 
 	Equipment->Begin_Equip();
@@ -34,10 +34,10 @@ void UCAnimNotifyState_Equip::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	UCActionComponent* ActionComp = CHelpers::GetComponent<UCActionComponent>(MeshComp->GetOwner());
 	CheckNull(ActionComp);
 
-	UCActionData* ActionData = ActionComp->GetCurrentDataAsset();
-	CheckNull(ActionData);
+	UCActionObject* ActionObject = ActionComp->GetCurrentDataObject();
+	CheckNull(ActionObject);
 
-	ACEquipment* Equipment = ActionData->GetEquipment();
+	ACEquipment* Equipment = ActionObject->GetEquipment();
 	CheckNull(Equipment);
 
 	Equipment->End_Equip();

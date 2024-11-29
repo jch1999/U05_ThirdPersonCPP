@@ -13,6 +13,7 @@ enum class EActionType : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FActionTypeChanged, EActionType, InPrevType, EActionType, InNewType);
 
 class UCActionData;
+class UCActionObject;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class THIREPERSONCPP_API UCActionComponent : public UActorComponent
@@ -56,6 +57,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE UCActionData* GetCurrentDataAsset() const { return DataAssets[(int32)Type]; }
 
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE UCActionObject* GetCurrentDataObject() const { return DataObjects[(int32)Type]; }
+
 	UFUNCTION(BlueprintCallable)
 	void SetUnarmedMode();
 
@@ -88,6 +92,9 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "DataAsset")
 	UCActionData* DataAssets[(int32)EActionType::Max];
+
+	UPROPERTY()
+	UCActionObject* DataObjects[(int32)EActionType::Max];
 
 private:	
 	EActionType Type;

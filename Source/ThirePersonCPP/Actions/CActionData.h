@@ -12,6 +12,7 @@ class ACDoAction;
 class UParticleSystem;
 class UCameraShake;
 class ACProjectile;
+class UCActionObject;
 
 // ----------------------------------------------------------------------------
 // struct FEquipmentData
@@ -75,12 +76,8 @@ class THIREPERSONCPP_API UCActionData : public UDataAsset
 	GENERATED_BODY()
 	
 public:
-	void BeginPlay(ACharacter* InOwnerCharacter);
+	void BeginPlay(ACharacter* InOwnerCharacter, UCActionObject** OutActionObject);
 
-public:
-	FORCEINLINE ACEquipment* GetEquipment() { return Equipment; }
-	FORCEINLINE ACAttachment* GetAttachment() { return Attachment; }
-	FORCEINLINE ACDoAction* GetDoAction() { return DoAction; }
 private:
 	FString MakeLabel(ACharacter* InOwnerCharacter,FString InMiddleName);
 
@@ -105,9 +102,4 @@ public:
 	
 	UPROPERTY(EditAnywhere, Category = "DoAction")
 	TArray<FActionData> DoActionDatas;
-
-private:
-	ACEquipment* Equipment;
-	ACAttachment* Attachment;
-	ACDoAction* DoAction;
 };

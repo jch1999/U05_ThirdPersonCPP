@@ -4,11 +4,13 @@
 #include "CEquipment.h"
 #include "CAttachment.h"
 #include "CDoAction.h"
+#include "CActionObject.h"
 
-void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
+void UCActionData::BeginPlay(ACharacter* InOwnerCharacter, UCActionObject** OutActionObject)
 {
 	CheckNull(InOwnerCharacter);
 
+	ACAttachment* Attachment = nullptr;
 	if (AttachmentClass)
 	{
 		FTransform TM;
@@ -18,6 +20,7 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 		Attachment->FinishSpawning(TM);
 	}
 
+	ACEquipment* Equipment = nullptr;
 	if (EquipmentClass)
 	{
 		FTransform TM;
@@ -35,6 +38,7 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 		}
 	}
 
+	ACDoAction* DoAction = nullptr;
 	if (DoActionClass)
 	{
 		FTransform TM;
@@ -55,6 +59,12 @@ void UCActionData::BeginPlay(ACharacter* InOwnerCharacter)
 			Attachment->OnAttachmentEndOverlap.AddDynamic(DoAction, &ACDoAction::OnAttachmentEndOverlap);
 		}
 	}
+
+	*OutActionObject = NewObject<UCActionObject>();
+	(*OutActionObject)->Attachment = Attachment;
+	(*OutActionObject)->Equipment = Equipment;
+	(*OutActionObject)->DoAction = DoAction;
+	(*OutActionObject)->EquipmentColor = EquipmentColor;
 }
 FString UCActionData::MakeLabel(ACharacter* InOwnerCharacter, FString InMiddleName)
 {
