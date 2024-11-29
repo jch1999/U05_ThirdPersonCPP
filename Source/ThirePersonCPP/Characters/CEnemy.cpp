@@ -235,6 +235,9 @@ void ACEnemy::Dead()
 		GetMesh()->AddImpulseAtLocation(Direction * DamageValue * LaunchValue, Start);
 	}
 
+	// Off All Collision
+	ActionComp->OffAllCollisions();
+
 	// Set Dissolve Material
 	FLinearColor EquipmentColor = FLinearColor::White;
 	if (ActionComp->GetCurrentDataAsset())
@@ -276,6 +279,7 @@ void ACEnemy::OnProgressDissolve(float OutPut)
 void ACEnemy::OnFinishDissolve()
 {
 	//Todo. Destory All Spawned Equipment, Attachment, DoAction 
+	ActionComp->DestoryAll();
 	Destroy();
 }
 
