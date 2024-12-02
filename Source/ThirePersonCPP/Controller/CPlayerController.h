@@ -11,6 +11,9 @@ class THIREPERSONCPP_API ACPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
+public:
+	ACPlayerController();
+
 protected:
 	virtual void SetupInputComponent();
 

@@ -55,6 +55,9 @@ ACPlayer::ACPlayer()
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	bUseControllerRotationYaw = false;
+
+	// Property Settings
+	TeamID = 0;
 }
 
 void ACPlayer::BeginPlay()
@@ -72,6 +75,8 @@ void ACPlayer::BeginPlay()
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
 
 	ActionComp->SetUnarmedMode();
+
+	// SetGenericTeamId(TeamID);
 }
 
 void ACPlayer::SetBodyColor(FLinearColor InColor)
@@ -104,6 +109,11 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &ACPlayer::OnPrimaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", IE_Pressed, this, &ACPlayer::OnBeginSecondaryAction);
 	PlayerInputComponent->BindAction("SecondaryAction", IE_Released, this, &ACPlayer::OnEndSecondaryAction);
+}
+
+FGenericTeamId ACPlayer::GetGenericTeamId() const
+{
+	return FGenericTeamId(TeamID);
 }
 
 void ACPlayer::OnMoveForward(float Axis)
