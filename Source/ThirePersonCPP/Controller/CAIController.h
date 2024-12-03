@@ -16,6 +16,9 @@ class THIREPERSONCPP_API ACAIController : public AAIController
 public:
 	ACAIController();
 
+	float GetSightRadius();
+	FORCEINLINE float GetBehaviorRange() { return BehaviorRange; }
+
 public:
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void OnUnPossess() override;
@@ -36,6 +39,16 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Team")
 	uint8 TeamID;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	bool bDrawRange;
+
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	float AdjustHeight;
+
+	// diffent usage by Enemy Type 
+	UPROPERTY(EditDefaultsOnly, Category = "AI")
+	float BehaviorRange;
 
 private:
 	ACEnemy_AI* PossessedEnemy;

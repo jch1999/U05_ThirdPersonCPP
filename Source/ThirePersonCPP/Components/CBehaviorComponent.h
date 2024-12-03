@@ -44,7 +44,7 @@ public:
 	UFUNCTION(BlueprintPure)
 	bool IsRunAwayMode();
 
-	void SetWiatMode();
+	void SetWaitMode();
 
 	void SetApproachMode();
 

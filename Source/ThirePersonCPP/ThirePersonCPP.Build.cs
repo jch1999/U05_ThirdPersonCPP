@@ -17,7 +17,8 @@ public class ThirePersonCPP : ModuleRules
 			"Engine", 
 			"InputCore", 
 			"UMG",
-			"AIModule"
+			"AIModule",
+			"GameplayTasks"
 		});
 	}
 }

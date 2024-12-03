@@ -41,7 +41,7 @@ bool UCBehaviorComponent::IsRunAwayMode()
 	return GetType() == EBehaviorType::RunAway;
 }
 
-void UCBehaviorComponent::SetWiatMode()
+void UCBehaviorComponent::SetWaitMode()
 {
 	ChangeType(EBehaviorType::Wait);
 }
