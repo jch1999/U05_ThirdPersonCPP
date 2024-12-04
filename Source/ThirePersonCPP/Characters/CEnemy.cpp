@@ -24,7 +24,7 @@ ACEnemy::ACEnemy()
 	GetMesh()->SetSkeletalMesh(MeshAsset);
 	GetMesh()->SetRelativeLocation(FVector(0, 0, -88));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90, 0));
-
+	
 	// Animation
 	TSubclassOf<UAnimInstance> AnimClass;
 	CHelpers::GetClass(&AnimClass, "/Game/Enemies/ABP_CEnemy");
@@ -71,6 +71,10 @@ ACEnemy::ACEnemy()
 	// Movement Comp
 	GetCharacterMovement()->MaxWalkSpeed = AttributeComp->GetSprintSpeed();
 	GetCharacterMovement()->RotationRate = FRotator(0, 720, 0);
+	
+	// Collision(Camera Channel Ignore)
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
 
 	// Get Dissolve Curve Asset
 	CHelpers::GetAsset(&DissolveCurve, "/Game/Curves/Curve_Dissolve");

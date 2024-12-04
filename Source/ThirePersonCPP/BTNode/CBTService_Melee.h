@@ -21,8 +21,5 @@ protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:
-	ACAIController* AIC;
-	UCBehaviorComponent* BehaviorComp;
-	APawn* EnemyPawn;
-	UCStateComponent* StateComp;
+	
 };

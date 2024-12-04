@@ -1,7 +1,7 @@
 #include "CAttributeComponent.h"
 #include "Global.h"
 #include "GameFramework/Character.h"
-#include "GameFramework/CharacterMovementComopnent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UCAttributeComponent::UCAttributeComponent()
 {
