@@ -43,7 +43,7 @@ public:
 	FORCEINLINE bool IsHittedMode() { return Type == EStateType::Hitted; }
 
 	UFUNCTION(BlueprintPure)
-		FORCEINLINE bool IsDeadMode() {return Type == EStateType::Dead;}
+	FORCEINLINE bool IsDeadMode() {return Type == EStateType::Dead;}
 
 	void SetIdleMode();
 	void SetRollMode();

@@ -51,7 +51,7 @@ private:
 	void OnFinishDissolve();
 
 protected:	
-	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UPROPERTY(BlueprintReadOnly, VisibleDefaultsOnly, Category = "Components")
 	UCAttributeComponent* AttributeComp;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")

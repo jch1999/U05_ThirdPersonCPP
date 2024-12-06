@@ -16,8 +16,8 @@ class THIREPERSONCPP_API UCBTService_Melee : public UBTService
 	
 public:
 	UCBTService_Melee();
+
 protected:
-	virtual void OnSearchStart(FBehaviorTreeSearchData& SearchData) override;
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 private:

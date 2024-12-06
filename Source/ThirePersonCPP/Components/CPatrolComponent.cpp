@@ -6,10 +6,9 @@
 bool UCPatrolComponent::GetMoveTo(FVector& OutLocation)
 {
 	OutLocation = FVector(-1, -1, -1);
-
 	CheckFalseResult(IsPathValid(), false);
 
-	OutLocation= PatrolPath->GetSplineComponent()->GetLocationAtSplinePoint(Index,ESplineCoordinateSpace::World);
+	OutLocation = PatrolPath->GetSplineComponent()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
 	return true;
 }
 
@@ -18,13 +17,13 @@ void UCPatrolComponent::UpdateNextIndex()
 	CheckFalse(IsPathValid());
 
 	int32 Count = PatrolPath->GetSplineComponent()->GetNumberOfSplinePoints();
-	
-	// Reverse
+
+	//Reverse
 	if (bReverse)
 	{
 		if (Index > 0)
 		{
-			--Index;
+			Index--;
 			return;
 		}
 
@@ -36,14 +35,14 @@ void UCPatrolComponent::UpdateNextIndex()
 
 		Index = 1;
 		bReverse = false;
-		
+
 		return;
 	}
 
-	// Forward
+	//Forward
 	if (Index < Count - 1)
 	{
-		++Index;
+		Index++;
 		return;
 	}
 

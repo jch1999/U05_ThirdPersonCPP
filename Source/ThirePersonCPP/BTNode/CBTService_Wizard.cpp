@@ -1,17 +1,16 @@
-#include "CBTService_Melee.h"
+#include "CBTService_Wizard.h"
 #include "Global.h"
 #include "Controller/CAIController.h"
 #include "Components/CBehaviorComponent.h"
 #include "Components/CStateComponent.h"
-#include "Components/CPatrolComponent.h"
 #include "Characters/CPlayer.h"
 
-UCBTService_Melee::UCBTService_Melee()
+UCBTService_Wizard::UCBTService_Wizard()
 {
-	NodeName = "RootService_Melee";
+	NodeName = "RootService_Wizard";
 }
 
-void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UCBTService_Wizard::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
 
@@ -27,12 +26,12 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	UCStateComponent* StateComp = CHelpers::GetComponent<UCStateComponent>(EnemyPawn);
 	CheckNull(StateComp);
 
-	UCPatrolComponent* PatrolComp = CHelpers::GetComponent<UCPatrolComponent>(EnemyPawn);
-	
 	// Dead
 	if (StateComp->IsDeadMode())
 	{
 		BehaviorComp->SetWaitMode();
+		AIC->BrainComponent->StopLogic("Enemy is Dead.");
+
 		return;
 	}
 
@@ -45,16 +44,13 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 
 	// Read Player from BB
 	ACPlayer* Player = BehaviorComp->GetPlayerValue();
-	
+
 	// No Perceived Player
 	if (!Player)
 	{
-		if (PatrolComp && PatrolComp->IsPathValid())
-		{
-			BehaviorComp->SetPatrolMode();
-			return;
-		}
 		BehaviorComp->SetWaitMode();
+		AIC->ClearFocus(EAIFocusPriority::LastFocusPriority);
+
 		return;
 	}
 
@@ -62,18 +58,19 @@ void UCBTService_Melee::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeM
 	float Distance = EnemyPawn->GetDistanceTo(Player);
 
 	// Perceived Player
+	AIC->SetFocus(Player);
 
 	// In Action Range
 	if (Distance < AIC->GetBehaviorRange())
 	{
-		BehaviorComp->SetActionMode();
+		BehaviorComp->SetRunAwayMode();
 		return;
 	}
 
 	// In Sight Range
 	if (Distance < AIC->GetSightRadius())
 	{
-		BehaviorComp->SetApproachMode();
+		BehaviorComp->SetActionMode();
 		return;
 	}
 }

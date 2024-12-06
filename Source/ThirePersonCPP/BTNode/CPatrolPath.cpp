@@ -17,6 +17,7 @@ ACPatrolPath::ACPatrolPath()
 	TextComp->SetRelativeLocation(FVector(0, 0, 100));
 	TextComp->SetRelativeRotation(FRotator(0, 180, 0));
 	TextComp->SetHorizontalAlignment(EHTA_Center);
+	TextComp->SetTextRenderColor(FColor::Red);
 	TextComp->SetWorldSize(80);
 
 	bRunConstructionScriptOnDrag = false;
