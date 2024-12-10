@@ -31,8 +31,11 @@ public:
 	
 	void Begin_SecondaryAction();
 	void End_SecondaryAction();
+
 	void OffAllCollisions();
 	void DestoryAll();
+
+	void Abort();
 
 public:
 	UFUNCTION(BlueprintCallable)

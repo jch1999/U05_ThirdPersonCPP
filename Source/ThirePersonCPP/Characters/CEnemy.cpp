@@ -127,6 +127,9 @@ void ACEnemy::BeginPlay()
 	FOnTimelineEvent DissolveTimelineFinish;
 	DissolveTimelineFinish.BindUFunction(this, "OnFinishDissolve");
 	DissolveTimeline.SetTimelineFinishedFunc(DissolveTimelineFinish);
+
+	// Visible NameWidget
+	NameWidgetComp->SetVisibility(bVisibleNameWidget);
 }
 
 void ACEnemy::Tick(float DeltaTime)
@@ -142,6 +145,8 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AContro
 
 	DamageInstigator = EventInstigator;
 	DamageValue = ActualDamage;
+
+	ActionComp->Abort();
 
 	AttributeComp->DecreaseHealth(Damage);
 
