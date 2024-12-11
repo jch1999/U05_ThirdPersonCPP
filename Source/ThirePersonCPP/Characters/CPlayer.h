@@ -14,6 +14,7 @@ class UCOptionComponent;
 class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
+class UPostProcessComponent;
 
 UCLASS()
 class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -96,6 +97,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UPostProcessComponent* PostProcessComp;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Team")
