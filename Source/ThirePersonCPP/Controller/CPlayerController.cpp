@@ -13,6 +13,8 @@ void ACPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("OptionMenu", IE_Pressed, this, &ACPlayerController::ToggleOptionMenu);
 
+	InputComponent->BindAction("SelectAction", IE_Pressed, this, &ACPlayerController::EnableSelectActionWidget);
+	InputComponent->BindAction("SelectAction", IE_Released, this, &ACPlayerController::DisableSelectActionWidget);
 }
 
 void ACPlayerController::ToggleOptionMenu()
@@ -39,4 +41,24 @@ void ACPlayerController::ToggleOptionMenu()
 
 	// 1. 실제 WB 메뉴가 없음
 	// 2. GM에 PC를 등록해야 한다
+}
+
+void ACPlayerController::EnableSelectActionWidget()
+{
+	if (SelectActionWidgetClass)
+	{
+		SelectActionWidget = CreateWidget(this, SelectActionWidgetClass);
+	}
+
+	if (SelectActionWidget)
+	{
+		SelectActionWidget->AddToViewport();
+
+		bShowMouseCursor = true;
+		SetInputMode(FInputModeGameAndUI());
+	}
+}
+
+void ACPlayerController::DisableSelectActionWidget()
+{
 }

@@ -15,6 +15,8 @@ class UCStateComponent;
 class UCMontagesComponent;
 class UCActionComponent;
 class UPostProcessComponent;
+class UMaterialInstanceConstant;
+class UUserWidget;
 
 UCLASS()
 class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -66,6 +68,8 @@ private:
 
 	void Hitted() override;
 	void Dead() override;
+
+	UFUNCTION()
 	void End_Dead() override;
 
 public:
@@ -104,6 +108,12 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Team")
 	uint8 TeamID;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Dead")
+	UMaterialInstanceConstant* PostProcessMaterial;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Dead")
+	TSubclassOf<UUserWidget> GameOverWidgetClass;
 
 private:
 	UMaterialInstanceDynamic* BodyMaterial;

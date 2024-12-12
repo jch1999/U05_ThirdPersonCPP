@@ -110,6 +110,8 @@ void ACDoAction_WhirlWind::End_PrimaryAction()
 void ACDoAction_WhirlWind::Abort()
 {
 	Super::Abort();
+
+	Deactivate();
 }
 
 void ACDoAction_WhirlWind::OnAttachmentBeginOverlap(ACharacter* InAttacker, AActor* InCauser, ACharacter* InOtherCharacter)
@@ -158,7 +160,10 @@ void ACDoAction_WhirlWind::Deactivate()
 {
 	bActivation = false;
 
-	EffectComp->DestroyComponent();
+	if (EffectComp)
+	{
+		EffectComp->DestroyComponent();
+	}
 
 	// Off Collision
 	ACAttachment* Attachment = Cast<ACAttachment>(BoxComp->GetOwner());

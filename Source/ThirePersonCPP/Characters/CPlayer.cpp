@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "Blueprint/UserWidget.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/PostProcessComponent.h"
 #include "Components/CAttributeComponent.h"
@@ -60,9 +61,9 @@ ACPlayer::ACPlayer()
 	bUseControllerRotationYaw = false;
 
 	// PostProcess Comp
-	CHelpers::CreateSceneComponent<UPostProcessComponent>(this, &PostProcessComp, "PostProcessComp", GetRootComp());
-	UMAterialIntanceConstant* Mat;
-	PostProcessComp->AddOrUpdateBlendable(Mat);
+	CHelpers::CreateSceneComponent<UPostProcessComponent>(this, &PostProcessComp, "PostProcessComp", GetRootComponent());
+	
+	PostProcessComp->bEnabled = false;
 
 	// Property Settings
 	TeamID = 0;
@@ -78,6 +79,12 @@ void ACPlayer::BeginPlay()
 	
 	GetMesh()->SetMaterial(0, BodyMaterial);
 	GetMesh()->SetMaterial(1, LogoMaterial);
+
+	// Set PostProcessMaterial
+	if (PostProcessMaterial)
+	{
+		PostProcessComp->AddOrUpdateBlendable(PostProcessMaterial, 1);
+	}
 
 	// On StateType Changed
 	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayer::OnStateTypeChanged);
@@ -344,7 +351,8 @@ void ACPlayer::Dead()
 	// Disable Input
 	DisableInput(GetController<APlayerController>());
 
-	// Somekind of Effect???
+	//PostProcess
+	PostProcessComp->bEnabled = true;
 
 	// End_Dead Timer
 	UKismetSystemLibrary::K2_SetTimer(this, "End_Dead", 5.0f, false);
@@ -352,7 +360,19 @@ void ACPlayer::Dead()
 
 void ACPlayer::End_Dead()
 {
-	// Todo. What???
+	ensure(GameOverWidgetClass);
+
+	APlayerController* PC = GetController<APlayerController>();
+	CheckNull(PC);
+
+	UUserWidget* GameOverWidget = CreateWidget<UUserWidget>(PC, GameOverWidgetClass);
+	CheckNull(GameOverWidget);
+
+	GameOverWidget->AddToViewport();
+
+	PC->bShowMouseCursor = true;
+
+	PC->SetInputMode(FInputModeGameAndUI());
 }
 
 void ACPlayer::End_Roll()
