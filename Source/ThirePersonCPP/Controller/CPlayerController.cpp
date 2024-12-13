@@ -1,10 +1,18 @@
 #include "CPlayerController.h"
-#include "Blueprint/UserWidget.h"
 #include "Global.h"
+#include "Blueprint/UserWidget.h"
 
 ACPlayerController::ACPlayerController()
 {
 	
+}
+
+void ACPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	StateComp = CHelpers::GetComponent<UCStateComponent>(InPawn);
+	StateComp->OnStateTypeChanged.AddDynamic(this, &ACPlayerController::DisableAtDead);
 }
 
 void ACPlayerController::SetupInputComponent()
@@ -45,7 +53,12 @@ void ACPlayerController::ToggleOptionMenu()
 
 void ACPlayerController::EnableSelectActionWidget()
 {
-	if (SelectActionWidgetClass)
+	if (StateComp)
+	{
+		CheckTrue(StateComp->IsDeadMode() || !(StateComp->IsIdleMode()));
+	}
+
+	if (!SelectActionWidget)
 	{
 		SelectActionWidget = CreateWidget(this, SelectActionWidgetClass);
 	}
@@ -61,4 +74,18 @@ void ACPlayerController::EnableSelectActionWidget()
 
 void ACPlayerController::DisableSelectActionWidget()
 {
+	if (SelectActionWidget && SelectActionWidget->IsInViewport())
+	{
+		SelectActionWidget->RemoveFromParent();
+		SelectActionWidget = nullptr;
+
+		bShowMouseCursor = false;
+		SetInputMode(FInputModeGameOnly());
+	}
+}
+
+void ACPlayerController::DisableAtDead(EStateType InPrevType, EStateType InNewType)
+{
+	CheckFalse(InNewType==EStateType::Dead)
+	DisableSelectActionWidget();
 }

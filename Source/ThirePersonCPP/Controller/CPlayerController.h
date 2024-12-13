@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/CStateComponent.h"
 #include "CPlayerController.generated.h"
 
 class UUserWidget;
@@ -14,6 +15,9 @@ class THIREPERSONCPP_API ACPlayerController : public APlayerController
 public:
 	ACPlayerController();
 
+public:
+	virtual void OnPossess(APawn* InPawn) override;
+
 protected:
 	virtual void SetupInputComponent();
 
@@ -24,6 +28,9 @@ public:
 private:
 	void EnableSelectActionWidget();
 	void DisableSelectActionWidget();
+
+	UFUNCTION()
+	void DisableAtDead(EStateType InPrevType, EStateType InNewType);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
@@ -37,4 +44,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	UUserWidget* SelectActionWidget;
+
+	UPROPERTY()
+	UCStateComponent* StateComp;
 };

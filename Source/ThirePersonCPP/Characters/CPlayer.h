@@ -17,6 +17,7 @@ class UCActionComponent;
 class UPostProcessComponent;
 class UMaterialInstanceConstant;
 class UUserWidget;
+class UCFeetComponent;
 
 UCLASS()
 class THIREPERSONCPP_API ACPlayer : public ACharacter, public ICCharacterInterface, public IGenericTeamAgentInterface
@@ -101,6 +102,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UCActionComponent* ActionComp;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	UCFeetComponent* FeetComp;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UPostProcessComponent* PostProcessComp;
