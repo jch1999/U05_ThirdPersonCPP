@@ -1,6 +1,10 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Zip files
+*.zip
+*/*.zip
+
 # Compiled Object files
 *.slo
 *.lo
