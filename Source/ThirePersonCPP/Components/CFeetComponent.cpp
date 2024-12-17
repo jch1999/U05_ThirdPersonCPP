@@ -56,7 +56,7 @@ void UCFeetComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void UCFeetComponent::Trace(FName InSocket, float& OutDistance, FRotator& OutRotation)
 {
 	OutDistance = 0.f;
-
+	OutRotation = FRotator::ZeroRotator;
 	FVector SocketLocation = OwnerCharacter->GetMesh()->GetSocketLocation(InSocket);
 	FVector Start(SocketLocation.X, SocketLocation.Y, OwnerCharacter->GetActorLocation().Z);
 
