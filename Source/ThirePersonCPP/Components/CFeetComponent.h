@@ -21,10 +21,10 @@ public:
 	FVector PelvisDistance;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	FRotator RightRotation;
+	FRotator LeftRotation;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly)
-	FRotator PelvisRotation;
+	FRotator RightRotation;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -45,7 +45,7 @@ public:
 	FORCEINLINE const FFeetData& GetData() { return Data; }
 
 private:
-	void Trace(FName InSocket, float& OutDistance);
+	void Trace(FName InSocket, float& OutDistance, FRotator& OutRotation);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "IK")
@@ -59,6 +59,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "IK")
 	float FootHeight;
+
+	UPROPERTY(EditDefaultsOnly, Category = "IK")
+	float InterpSpeed;
 
 	UPROPERTY(EditDefaultsOnly, Category = "IK")
 	TEnumAsByte<EDrawDebugTrace::Type> DrawDebugType;
